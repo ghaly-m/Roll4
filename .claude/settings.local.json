@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(where.exe node:*)",
+      "Bash(where.exe npm:*)",
+      "Bash(where.exe npx:*)",
+      "Bash(cmd.exe /c \"where node 2>NUL & where npm 2>NUL & where npx 2>NUL\")",
+      "Read(//mnt/c/Program Files/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/nodejs:/c/Users/mghal/AppData/Roaming/npm\")",
+      "Bash(powershell.exe -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
+      "Bash(npm --version)",
+      "Bash(powershell.exe -Command \"node --version; npm --version\")",
+      "Bash(tr ';' '\\\\n')",
+      "Bash(export PATH=\"$PATH:/c/Program Files/nodejs\")",
+      "Bash(cp -r Roll4_temp/* Roll4_temp/.* .)",
+      "Bash(rm -rf Roll4_temp)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(npx vite:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(export 'PATH=$PATH:/c/Program Files/nodejs')",
+      "Bash(npx kill-port:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(node -e \"fetch\\(''https://5etools-mirror-2.github.io/data/bestiary/bestiary-mm.json''\\).then\\(r => console.log\\(''status:'', r.status\\)\\).catch\\(e => console.log\\(''error:'', e.message\\)\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(gh auth:*)",
+      "mcp__mcp-registry__search_mcp_registry",
+      "Bash(git --version)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)"
+    ]
+  }
+}

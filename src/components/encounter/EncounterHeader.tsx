@@ -3,7 +3,7 @@ import { TurnControls } from '../initiative/TurnControls';
 
 export function EncounterHeader() {
   return (
-    <div className="flex items-center justify-between mb-4 pb-4 border-b border-parchment/10">
+    <div className="flex items-center justify-between mb-6 pb-5 border-b border-amber/10">
       <RoundCounter />
       <TurnControls />
     </div>

@@ -28,36 +28,46 @@ export function ConditionPicker({ characterId, onClose }: ConditionPickerProps) 
   };
 
   return (
-    <div className="absolute z-10 top-full left-0 mt-1 w-64 bg-ink border border-parchment/20 rounded-lg shadow-xl p-2">
-      <input
-        autoFocus
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search conditions..."
-        className="w-full px-2 py-1.5 text-xs rounded bg-ink-light/50 border border-parchment/10 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold mb-2"
-      />
-      <div className="flex items-center gap-2 mb-2 px-1">
-        <label className="text-xs text-parchment/50">Rounds:</label>
+    <div className="absolute z-10 top-full left-0 mt-2 w-72 bg-obsidian border border-slate/30 rounded-lg shadow-2xl shadow-void/80 animate-slide-down">
+      {/* Header */}
+      <div className="p-3 border-b border-slate/20">
         <input
-          type="number"
-          min="1"
-          value={rounds}
-          onChange={(e) => setRounds(e.target.value)}
-          placeholder="∞"
-          className="w-12 px-1.5 py-0.5 text-xs rounded bg-ink-light/50 border border-parchment/10 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          autoFocus
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search conditions..."
+          className="w-full px-3 py-1.5 text-sm rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber transition-colors font-body"
         />
+        <div className="flex items-center gap-2 mt-2 px-1">
+          <label className="text-[10px] font-display tracking-wider uppercase text-ash/50">
+            Rounds:
+          </label>
+          <input
+            type="number"
+            min="1"
+            value={rounds}
+            onChange={(e) => setRounds(e.target.value)}
+            placeholder="&#8734;"
+            className="w-14 px-2 py-1 text-xs font-mono rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-colors"
+          />
+        </div>
       </div>
-      <div className="max-h-48 overflow-y-auto">
+
+      {/* Condition list */}
+      <div className="max-h-52 overflow-y-auto p-1.5">
         {filtered.map(c => (
           <button
             key={c.id}
             onClick={() => handleAdd(c.id)}
-            className="w-full text-left px-2 py-1.5 text-xs rounded hover:bg-royal/10 text-parchment transition-colors"
+            className="w-full text-left px-3 py-2 text-sm rounded hover:bg-arcane/10 text-bone/80 hover:text-bone transition-colors"
             title={c.description}
           >
             {c.name}
           </button>
         ))}
+        {filtered.length === 0 && (
+          <p className="text-xs text-ash/40 text-center py-3">No conditions found</p>
+        )}
       </div>
     </div>
   );

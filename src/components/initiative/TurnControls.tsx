@@ -15,20 +15,20 @@ export function TurnControls() {
       <button
         onClick={prevTurn}
         disabled={!canGoPrev}
-        className="px-3 py-1.5 text-sm rounded bg-steel/30 text-parchment hover:bg-steel/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-slate/40 text-ash hover:text-bone hover:border-ash/60 disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200"
       >
         Prev
       </button>
       <button
         onClick={nextTurn}
-        className="px-4 py-1.5 text-sm rounded bg-emerald text-white font-medium hover:bg-emerald-dark transition-colors"
+        className="px-5 py-2 text-sm font-display tracking-wider uppercase rounded bg-verdant/30 text-verdant font-semibold border border-verdant/40 hover:bg-verdant/40 transition-all duration-200"
       >
         {encounter.isActive ? 'Next' : 'Start'}
       </button>
       {encounter.isActive && (
         <button
           onClick={resetEncounter}
-          className="px-3 py-1.5 text-sm rounded bg-crimson/20 text-crimson hover:bg-crimson/30 transition-colors"
+          className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-blood/40 text-blood hover:bg-blood/10 hover:border-blood/60 transition-all duration-200"
         >
           Reset
         </button>

@@ -11,22 +11,31 @@ export function InitiativeTracker() {
   const activeCharId = sorted[encounter.currentTurnIndex]?.id ?? null;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <AddCharacterForm />
 
       {sorted.length === 0 ? (
-        <div className="text-center py-12 text-parchment/40">
-          <p className="text-lg mb-1">No combatants yet</p>
-          <p className="text-sm">Add characters above or search for monsters from Open5e</p>
+        <div className="text-center py-16">
+          <p className="font-display text-sm tracking-[0.15em] uppercase text-ash/40 mb-2">
+            No combatants yet
+          </p>
+          <p className="text-xs text-ash/30">
+            Add characters above or search for monsters from Open5e
+          </p>
         </div>
       ) : (
-        <div className="space-y-2">
-          {sorted.map((char) => (
-            <InitiativeRow
+        <div className="space-y-3">
+          {sorted.map((char, i) => (
+            <div
               key={char.id}
-              character={char}
-              isActive={encounter.isActive && char.id === activeCharId}
-            />
+              className="animate-fade-up"
+              style={{ animationDelay: `${i * 50}ms` }}
+            >
+              <InitiativeRow
+                character={char}
+                isActive={encounter.isActive && char.id === activeCharId}
+              />
+            </div>
           ))}
         </div>
       )}

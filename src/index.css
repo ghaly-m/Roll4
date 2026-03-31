@@ -1,26 +1,271 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @theme {
-  --color-parchment: #f5f0e8;
-  --color-parchment-dark: #e8e0d0;
+  --color-void: #0a0a0f;
+  --color-void-light: #12121c;
+  --color-obsidian: #1a1a2e;
+  --color-obsidian-light: #252540;
+  --color-slate: #3a3a5c;
+  --color-ash: #8888a8;
+  --color-bone: #c8c4b8;
+  --color-parchment: #e8e0d0;
+  --color-parchment-dark: #d4cab6;
   --color-ink: #1a1a2e;
   --color-ink-light: #4a4a5e;
-  --color-crimson: #dc2626;
-  --color-crimson-dark: #991b1b;
-  --color-emerald: #059669;
-  --color-emerald-dark: #047857;
-  --color-royal: #7c3aed;
-  --color-royal-dark: #6d28d9;
-  --color-gold: #d97706;
-  --color-gold-dark: #b45309;
+
+  --color-amber: #d4a843;
+  --color-amber-dark: #b8922e;
+  --color-amber-glow: #f0c85020;
+  --color-gold: #d4a843;
+  --color-gold-dark: #b8922e;
+
+  --color-blood: #c42b2b;
+  --color-blood-dark: #8b1a1a;
+  --color-crimson: #c42b2b;
+  --color-crimson-dark: #8b1a1a;
+
+  --color-verdant: #2d9e6a;
+  --color-verdant-dark: #1e7a50;
+  --color-emerald: #2d9e6a;
+  --color-emerald-dark: #1e7a50;
+
+  --color-arcane: #7b5ea7;
+  --color-arcane-dark: #5e4585;
+  --color-arcane-glow: #9b7ec820;
+  --color-royal: #7b5ea7;
+  --color-royal-dark: #5e4585;
+
+  --color-frost: #4a9ead;
+  --color-frost-dark: #357a88;
+
   --color-steel: #64748b;
   --color-steel-dark: #475569;
+
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Crimson Text', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ── Base ──────────────────────────────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate) transparent;
 }
 
 body {
   margin: 0;
-  background-color: var(--color-ink);
-  color: var(--color-parchment);
-  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  font-size: 16px;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Noise texture overlay ─────────────────────────── */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Vignette ──────────────────────────────────────── */
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, var(--color-void) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── Selection ─────────────────────────────────────── */
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-void);
+}
+
+/* ── Focus ─────────────────────────────────────────── */
+
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: 1px solid var(--color-amber);
+  outline-offset: 1px;
+}
+
+/* ── Ambient background ────────────────────────────── */
+
+.grimoire-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 20%, rgba(123, 94, 167, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 800px at 80% 80%, rgba(212, 168, 67, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 60% 30%, rgba(74, 158, 173, 0.03) 0%, transparent 70%),
+    var(--color-void);
+}
+
+/* ── Ornamental dividers ───────────────────────────── */
+
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-amber);
+  opacity: 0.4;
+}
+
+.divider-ornament::before,
+.divider-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-amber), transparent);
+}
+
+/* ── Card ornamental corners ───────────────────────── */
+
+.card-ornate {
+  position: relative;
+}
+
+.card-ornate::before,
+.card-ornate::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-amber);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.card-ornate::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+
+.card-ornate::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+/* ── Glow pulse for active turn ────────────────────── */
+
+@keyframes arcane-pulse {
+  0%, 100% { box-shadow: 0 0 15px -5px var(--color-amber-glow), inset 0 0 15px -10px var(--color-amber-glow); }
+  50% { box-shadow: 0 0 25px -5px var(--color-amber-glow), inset 0 0 25px -10px var(--color-amber-glow); }
+}
+
+.glow-active {
+  animation: arcane-pulse 3s ease-in-out infinite;
+}
+
+/* ── Rune shimmer for the turn arrow ───────────────── */
+
+@keyframes rune-shimmer {
+  0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 2px var(--color-amber)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 6px var(--color-amber)); }
+}
+
+.rune-shimmer {
+  animation: rune-shimmer 2s ease-in-out infinite;
+}
+
+/* ── Fade-in stagger ───────────────────────────────── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
+}
+
+/* ── Slide-in for modals ───────────────────────────── */
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out both;
+}
+
+/* ── Backdrop fade ─────────────────────────────────── */
+
+@keyframes backdrop-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-backdrop {
+  animation: backdrop-fade 0.2s ease-out both;
+}
+
+/* ── HP bar gradient ───────────────────────────────── */
+
+.hp-bar-healthy {
+  background: linear-gradient(90deg, var(--color-verdant-dark), var(--color-verdant));
+}
+
+.hp-bar-wounded {
+  background: linear-gradient(90deg, var(--color-amber-dark), var(--color-amber));
+}
+
+.hp-bar-critical {
+  background: linear-gradient(90deg, var(--color-blood-dark), var(--color-blood));
+}
+
+.hp-bar-temp {
+  background: linear-gradient(90deg, var(--color-arcane-dark), var(--color-arcane));
+}
+
+/* ── Stat block decorations ────────────────────────── */
+
+.stat-block-header {
+  background: linear-gradient(90deg, rgba(139, 26, 26, 0.25), transparent);
+  padding: 2px 8px;
+  border-left: 2px solid var(--color-blood);
+}
+
+/* ── Custom scrollbar (webkit) ─────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ash);
+}
+
+/* ── Utility ───────────────────────────────────────── */
+
+.text-shadow-glow {
+  text-shadow: 0 0 20px var(--color-amber-glow), 0 0 40px var(--color-amber-glow);
 }

@@ -12,18 +12,20 @@ export function ConditionBadge({ condition, onRemove }: ConditionBadgeProps) {
 
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-royal/20 text-royal border border-royal/30 cursor-default group"
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-display tracking-wider uppercase rounded border border-arcane/30 bg-arcane/10 text-arcane cursor-default group"
       title={definition.description}
     >
       {definition.name}
       {condition.roundsRemaining !== null && (
-        <span className="text-royal/60">{condition.roundsRemaining}r</span>
+        <span className="text-arcane/50 font-mono text-[10px] normal-case tracking-normal">
+          {condition.roundsRemaining}r
+        </span>
       )}
       <button
         onClick={onRemove}
-        className="ml-0.5 opacity-0 group-hover:opacity-100 text-royal/60 hover:text-royal transition-opacity"
+        className="ml-0.5 opacity-0 group-hover:opacity-100 text-arcane/40 hover:text-arcane transition-opacity text-xs"
       >
-        ×
+        &#x00d7;
       </button>
     </span>
   );

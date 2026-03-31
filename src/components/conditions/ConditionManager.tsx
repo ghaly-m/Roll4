@@ -13,7 +13,7 @@ export function ConditionManager({ characterId, conditions, onRemove }: Conditio
   const [showPicker, setShowPicker] = useState(false);
 
   return (
-    <div className="relative flex flex-wrap items-center gap-1">
+    <div className="relative flex flex-wrap items-center gap-1.5">
       {conditions.map(c => (
         <ConditionBadge
           key={c.instanceId}
@@ -23,7 +23,7 @@ export function ConditionManager({ characterId, conditions, onRemove }: Conditio
       ))}
       <button
         onClick={() => setShowPicker(!showPicker)}
-        className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-parchment/10 text-parchment/50 hover:bg-parchment/20 hover:text-parchment transition-colors"
+        className="inline-flex items-center justify-center w-6 h-6 text-xs rounded border border-dashed border-ash/20 text-ash/40 hover:border-arcane/40 hover:text-arcane hover:bg-arcane/5 transition-all duration-200"
         title="Add condition"
       >
         +

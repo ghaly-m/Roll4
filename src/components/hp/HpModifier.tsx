@@ -18,36 +18,38 @@ export function HpModifier({ characterId }: { characterId: string }) {
     setAmount('');
   };
 
+  const btnBase = "px-2 py-1 text-[10px] font-display tracking-wider uppercase rounded border transition-all duration-200";
+
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1.5">
       <input
         type="number"
         min="0"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         placeholder="HP"
-        className="w-14 px-2 py-1 text-xs rounded bg-ink-light/50 border border-parchment/10 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        className="w-14 px-2 py-1 text-xs font-mono rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none transition-colors"
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleAction('damage');
         }}
       />
       <button
         onClick={() => handleAction('damage')}
-        className="px-1.5 py-1 text-xs rounded bg-crimson/20 text-crimson hover:bg-crimson/30 transition-colors"
+        className={`${btnBase} border-blood/30 text-blood hover:bg-blood/10 hover:border-blood/50`}
         title="Deal damage"
       >
         DMG
       </button>
       <button
         onClick={() => handleAction('heal')}
-        className="px-1.5 py-1 text-xs rounded bg-emerald/20 text-emerald hover:bg-emerald/30 transition-colors"
+        className={`${btnBase} border-verdant/30 text-verdant hover:bg-verdant/10 hover:border-verdant/50`}
         title="Heal"
       >
         HEAL
       </button>
       <button
         onClick={() => handleAction('temp')}
-        className="px-1.5 py-1 text-xs rounded bg-royal/20 text-royal hover:bg-royal/30 transition-colors"
+        className={`${btnBase} border-arcane/30 text-arcane hover:bg-arcane/10 hover:border-arcane/50`}
         title="Set temp HP"
       >
         TMP

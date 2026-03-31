@@ -34,74 +34,105 @@ export function AddCharacterForm() {
     setMaxHp('');
   };
 
+  const inputClasses = "w-full px-3 py-2 text-sm rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber transition-colors font-body";
+  const numInputClasses = `${inputClasses} text-center font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`;
+
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-2 p-3 bg-parchment/5 rounded-lg border border-parchment/10">
-        <div className="flex-1 min-w-[120px]">
-          <label className="block text-xs text-parchment/50 mb-1">Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Character name"
-            className="w-full px-2 py-1.5 text-sm rounded bg-ink border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold"
-          />
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-lg border border-slate/20 bg-obsidian/30 p-4"
+      >
+        <div className="flex flex-wrap items-end gap-3">
+          {/* Name */}
+          <div className="flex-1 min-w-[140px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              Name
+            </label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Character name"
+              className={inputClasses}
+            />
+          </div>
+
+          {/* Initiative */}
+          <div className="w-[68px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              Init
+            </label>
+            <input
+              type="number"
+              value={initiative}
+              onChange={(e) => setInitiative(e.target.value)}
+              placeholder="0"
+              className={numInputClasses}
+            />
+          </div>
+
+          {/* AC */}
+          <div className="w-[68px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              AC
+            </label>
+            <input
+              type="number"
+              value={ac}
+              onChange={(e) => setAc(e.target.value)}
+              placeholder="—"
+              className={numInputClasses}
+            />
+          </div>
+
+          {/* HP */}
+          <div className="w-[68px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              HP
+            </label>
+            <input
+              type="number"
+              value={maxHp}
+              onChange={(e) => setMaxHp(e.target.value)}
+              placeholder="0"
+              className={numInputClasses}
+            />
+          </div>
+
+          {/* Type */}
+          <div className="w-[90px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              Type
+            </label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as CharacterType)}
+              className="w-full px-3 py-2 text-sm rounded bg-void/60 border border-slate/30 text-bone focus:border-amber transition-colors font-body"
+            >
+              <option value="pc">PC</option>
+              <option value="npc">NPC</option>
+              <option value="monster">Monster</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="px-5 py-2 text-sm font-display tracking-wider uppercase rounded bg-amber/30 text-amber font-semibold border border-amber/40 hover:bg-amber/40 transition-all duration-200"
+            >
+              Add
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowMonsterSearch(true)}
+              className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-arcane/40 text-arcane hover:bg-arcane/10 hover:border-arcane/60 transition-all duration-200"
+              title="Search Open5e for a monster"
+            >
+              Lookup
+            </button>
+          </div>
         </div>
-        <div className="w-16">
-          <label className="block text-xs text-parchment/50 mb-1">Init</label>
-          <input
-            type="number"
-            value={initiative}
-            onChange={(e) => setInitiative(e.target.value)}
-            placeholder="0"
-            className="w-full px-2 py-1.5 text-sm rounded bg-ink border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          />
-        </div>
-        <div className="w-16">
-          <label className="block text-xs text-parchment/50 mb-1">AC</label>
-          <input
-            type="number"
-            value={ac}
-            onChange={(e) => setAc(e.target.value)}
-            placeholder="0"
-            className="w-full px-2 py-1.5 text-sm rounded bg-ink border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          />
-        </div>
-        <div className="w-16">
-          <label className="block text-xs text-parchment/50 mb-1">HP</label>
-          <input
-            type="number"
-            value={maxHp}
-            onChange={(e) => setMaxHp(e.target.value)}
-            placeholder="0"
-            className="w-full px-2 py-1.5 text-sm rounded bg-ink border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          />
-        </div>
-        <div className="w-20">
-          <label className="block text-xs text-parchment/50 mb-1">Type</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as CharacterType)}
-            className="w-full px-2 py-1.5 text-sm rounded bg-ink border border-parchment/20 text-parchment focus:outline-none focus:border-gold"
-          >
-            <option value="pc">PC</option>
-            <option value="npc">NPC</option>
-            <option value="monster">Monster</option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-1.5 text-sm rounded bg-gold text-ink font-medium hover:bg-gold-dark transition-colors"
-        >
-          Add
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowMonsterSearch(true)}
-          className="px-3 py-1.5 text-sm rounded bg-crimson/20 text-crimson hover:bg-crimson/30 transition-colors"
-          title="Search Open5e for a monster"
-        >
-          Lookup Monster
-        </button>
       </form>
 
       {showMonsterSearch && (

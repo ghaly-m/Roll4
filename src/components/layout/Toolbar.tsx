@@ -17,46 +17,77 @@ export function Toolbar() {
   };
 
   return (
-    <header className="flex items-center justify-between mb-6">
-      <h1 className="text-2xl font-bold tracking-tight">
-        <span className="text-gold">Roll4</span>
-        {encounter && <span className="text-parchment-dark text-lg ml-3">/ {encounter.name}</span>}
-      </h1>
+    <header className="mb-10">
+      <div className="flex items-end justify-between">
+        {/* Title */}
+        <div>
+          <h1 className="font-display text-3xl font-bold tracking-[0.15em] uppercase">
+            <span className="text-amber text-shadow-glow">Roll4</span>
+          </h1>
+          {encounter ? (
+            <p className="font-display text-sm tracking-[0.2em] uppercase text-ash mt-1">
+              {encounter.name}
+            </p>
+          ) : (
+            <p className="text-sm tracking-[0.2em] text-slate mt-1 font-display uppercase">
+              Initiative Tracker
+            </p>
+          )}
+        </div>
 
-      <div className="flex gap-2">
-        {encounter && (
-          <button
-            onClick={deleteEncounter}
-            className="px-3 py-1.5 text-sm rounded bg-crimson/20 text-crimson hover:bg-crimson/30 transition-colors"
-          >
-            End Encounter
-          </button>
-        )}
-        {!showNew && !encounter && (
-          <button
-            onClick={() => setShowNew(true)}
-            className="px-4 py-1.5 text-sm rounded bg-gold text-ink font-medium hover:bg-gold-dark transition-colors"
-          >
-            New Encounter
-          </button>
-        )}
-        {showNew && !encounter && (
-          <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }} className="flex gap-2">
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Encounter name..."
-              className="px-3 py-1.5 text-sm rounded bg-ink-light/50 border border-parchment/20 text-parchment placeholder:text-parchment/40 focus:outline-none focus:border-gold"
-            />
-            <button type="submit" className="px-3 py-1.5 text-sm rounded bg-gold text-ink font-medium hover:bg-gold-dark transition-colors">
-              Create
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          {encounter && (
+            <button
+              onClick={deleteEncounter}
+              className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-blood/40 text-blood hover:bg-blood/10 hover:border-blood/60 transition-all duration-200"
+            >
+              End Encounter
             </button>
-            <button type="button" onClick={() => setShowNew(false)} className="px-3 py-1.5 text-sm rounded text-parchment/60 hover:text-parchment transition-colors">
-              Cancel
+          )}
+          {!showNew && !encounter && (
+            <button
+              onClick={() => setShowNew(true)}
+              className="px-5 py-2.5 text-sm font-display tracking-wider uppercase rounded bg-amber text-void font-semibold hover:bg-amber-dark transition-all duration-200 shadow-lg shadow-amber/20"
+            >
+              New Encounter
             </button>
-          </form>
-        )}
+          )}
+          {showNew && !encounter && (
+            <form
+              onSubmit={(e) => { e.preventDefault(); handleCreate(); }}
+              className="flex items-center gap-2 animate-fade-up"
+            >
+              <input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Name your encounter..."
+                className="px-4 py-2 text-sm rounded bg-obsidian border border-slate/40 text-bone placeholder:text-ash/40 focus:border-amber transition-colors font-body"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded bg-amber text-void font-semibold hover:bg-amber-dark transition-all duration-200"
+              >
+                Create
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNew(false)}
+                className="px-3 py-2 text-sm text-ash hover:text-bone transition-colors"
+              >
+                Cancel
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+
+      {/* Ornamental divider */}
+      <div className="divider-ornament mt-6">
+        <span className="font-display text-[10px] tracking-[0.5em] uppercase">
+          &#10022;
+        </span>
       </div>
     </header>
   );

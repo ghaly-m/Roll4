@@ -92,29 +92,45 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/60" />
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-void/80 backdrop-blur-sm animate-backdrop" />
       <div
-        className="relative w-full max-w-md bg-ink border border-parchment/20 rounded-lg shadow-2xl"
+        className="relative w-full max-w-lg bg-obsidian border border-slate/30 rounded-lg shadow-2xl shadow-void/90 animate-slide-down"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b border-parchment/10">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-gold">Add Monster</h3>
-            <button onClick={onClose} className="text-parchment/40 hover:text-parchment text-sm">✕</button>
+        {/* Header */}
+        <div className="p-5 border-b border-slate/20">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-sm font-bold tracking-[0.15em] uppercase text-amber">
+              Add Monster
+            </h3>
+            <button
+              onClick={onClose}
+              className="text-ash/40 hover:text-bone text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-slate/20 transition-colors"
+            >
+              &#x2715;
+            </button>
           </div>
 
           {/* Tab toggle */}
-          <div className="flex gap-1 mb-3 bg-ink-light/30 rounded p-0.5">
+          <div className="flex gap-1 bg-void/40 rounded p-1">
             <button
               onClick={() => setTab('search')}
-              className={`flex-1 px-3 py-1 text-xs rounded transition-colors ${tab === 'search' ? 'bg-gold text-ink font-medium' : 'text-parchment/60 hover:text-parchment'}`}
+              className={`flex-1 px-4 py-1.5 text-[11px] font-display tracking-wider uppercase rounded transition-all duration-200 ${
+                tab === 'search'
+                  ? 'bg-amber text-void font-semibold shadow-sm'
+                  : 'text-ash hover:text-bone'
+              }`}
             >
               Search Open5e
             </button>
             <button
               onClick={() => setTab('paste')}
-              className={`flex-1 px-3 py-1 text-xs rounded transition-colors ${tab === 'paste' ? 'bg-gold text-ink font-medium' : 'text-parchment/60 hover:text-parchment'}`}
+              className={`flex-1 px-4 py-1.5 text-[11px] font-display tracking-wider uppercase rounded transition-all duration-200 ${
+                tab === 'paste'
+                  ? 'bg-amber text-void font-semibold shadow-sm'
+                  : 'text-ash hover:text-bone'
+              }`}
             >
               Paste Stats
             </button>
@@ -126,31 +142,44 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name... (e.g. Goblin, Dragon)"
-              className="w-full px-3 py-2 text-sm rounded bg-ink-light/50 border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold"
+              className="w-full mt-4 px-4 py-2.5 text-sm rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber transition-colors font-body"
             />
           )}
         </div>
 
+        {/* Search results */}
         {tab === 'search' && (
           <>
             <div className="max-h-80 overflow-y-auto p-2">
-              {loading && <p className="text-xs text-parchment/50 text-center py-4">Searching...</p>}
-              {error && <p className="text-xs text-crimson text-center py-4">{error}</p>}
+              {loading && (
+                <p className="text-xs text-ash/50 text-center py-8 font-display tracking-wider uppercase">
+                  Searching...
+                </p>
+              )}
+              {error && (
+                <p className="text-xs text-blood text-center py-8">{error}</p>
+              )}
               {!loading && !error && results.length === 0 && query.trim() && (
-                <p className="text-xs text-parchment/50 text-center py-4">No monsters found. Try "Paste Stats" to import from 5e.tools.</p>
+                <p className="text-xs text-ash/40 text-center py-8">
+                  No monsters found. Try "Paste Stats" to import from 5e.tools.
+                </p>
               )}
               {results.map((m) => (
                 <button
                   key={m.slug}
                   onClick={() => handleSelect(m)}
                   disabled={loadingSlug === m.slug}
-                  className="w-full text-left px-3 py-2 rounded hover:bg-parchment/5 transition-colors flex items-center justify-between disabled:opacity-50"
+                  className="w-full text-left px-4 py-3 rounded hover:bg-amber/5 transition-all duration-200 flex items-center justify-between disabled:opacity-50 group"
                 >
                   <div>
-                    <span className="text-sm text-parchment font-medium">{m.name}</span>
-                    <span className="text-xs text-parchment/50 ml-2">{m.size} {m.type}</span>
+                    <span className="text-sm text-bone font-semibold group-hover:text-amber transition-colors">
+                      {m.name}
+                    </span>
+                    <span className="text-[11px] text-ash/50 ml-2 capitalize">
+                      {m.size} {m.type}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-parchment/50">
+                  <div className="flex items-center gap-4 text-[11px] font-mono text-ash/50">
                     <span>CR {m.challenge_rating}</span>
                     <span>HP {m.hit_points}</span>
                     <span>AC {m.armor_class}</span>
@@ -158,15 +187,18 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
                 </button>
               ))}
             </div>
-            <div className="p-2 border-t border-parchment/10 text-center">
-              <span className="text-xs text-parchment/30">Initiative will be set to 0 — click the number to edit after adding</span>
+            <div className="p-3 border-t border-slate/15 text-center">
+              <span className="text-[10px] text-ash/30 font-display tracking-wider">
+                Initiative will be set to 0 — click the number to edit after adding
+              </span>
             </div>
           </>
         )}
 
+        {/* Paste tab */}
         {tab === 'paste' && (
-          <div className="p-4">
-            <p className="text-xs text-parchment/50 mb-2">
+          <div className="p-5">
+            <p className="text-xs text-ash/50 mb-3">
               Copy a stat block from 5e.tools or any source and paste it below.
             </p>
             <textarea
@@ -175,13 +207,15 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
               onChange={(e) => { setPasteText(e.target.value); setParseError(null); }}
               placeholder="Paste stat block text here..."
               rows={12}
-              className="w-full px-3 py-2 text-xs font-mono rounded bg-ink-light/50 border border-parchment/20 text-parchment placeholder:text-parchment/30 focus:outline-none focus:border-gold resize-none"
+              className="w-full px-4 py-3 text-xs font-mono rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber resize-none transition-colors"
             />
-            {parseError && <p className="text-xs text-crimson mt-2">{parseError}</p>}
+            {parseError && (
+              <p className="text-xs text-blood mt-2">{parseError}</p>
+            )}
             <button
               onClick={handlePaste}
               disabled={!pasteText.trim()}
-              className="mt-3 w-full px-4 py-2 text-sm rounded bg-gold text-ink font-medium hover:bg-gold-dark disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="mt-4 w-full px-4 py-2.5 text-sm font-display tracking-wider uppercase rounded bg-amber text-void font-semibold hover:bg-amber-dark disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-amber/10"
             >
               Parse & Add Monster
             </button>

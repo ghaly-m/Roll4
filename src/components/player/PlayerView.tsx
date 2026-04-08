@@ -60,10 +60,10 @@ export function PlayerView() {
           )}
         </header>
 
-        {/* DM link — subtle, bottom-right */}
+        {/* DM link */}
         <a
           href="#/dm"
-          className="fixed bottom-4 right-4 z-10 font-display text-[10px] tracking-[0.3em] uppercase text-ash/20 hover:text-ash/50 transition-colors duration-300"
+          className="fixed bottom-5 right-5 z-10 px-3 py-1.5 font-display text-[10px] tracking-[0.3em] uppercase text-ash/50 hover:text-amber border border-slate/30 hover:border-amber/40 rounded transition-all duration-300"
         >
           DM
         </a>

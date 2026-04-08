@@ -38,12 +38,21 @@ export function Toolbar() {
         {/* Actions */}
         <div className="flex items-center gap-3">
           {encounter && (
-            <button
-              onClick={deleteEncounter}
-              className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-blood/40 text-blood hover:bg-blood/10 hover:border-blood/60 transition-all duration-200"
-            >
-              End Encounter
-            </button>
+            <>
+              <button
+                onClick={() => window.open(`${window.location.pathname}#/player`, '_blank')}
+                className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-arcane/40 text-arcane hover:bg-arcane/10 hover:border-arcane/60 transition-all duration-200"
+                title="Open a read-only view for players"
+              >
+                Player View
+              </button>
+              <button
+                onClick={deleteEncounter}
+                className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-blood/40 text-blood hover:bg-blood/10 hover:border-blood/60 transition-all duration-200"
+              >
+                End Encounter
+              </button>
+            </>
           )}
           {!showNew && !encounter && (
             <button

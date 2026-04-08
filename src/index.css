@@ -269,3 +269,11 @@ input:focus, select:focus, textarea:focus, button:focus-visible {
 .text-shadow-glow {
   text-shadow: 0 0 20px var(--color-amber-glow), 0 0 40px var(--color-amber-glow);
 }
+
+/* ── Player view active card ─────────────────────── */
+
+.player-card-active {
+  transform: scale(1.01);
+  z-index: 1;
+  position: relative;
+}

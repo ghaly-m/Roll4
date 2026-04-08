@@ -60,6 +60,14 @@ export function PlayerView() {
           )}
         </header>
 
+        {/* DM link — subtle, bottom-right */}
+        <a
+          href="#/dm"
+          className="fixed bottom-4 right-4 z-10 font-display text-[10px] tracking-[0.3em] uppercase text-ash/20 hover:text-ash/50 transition-colors duration-300"
+        >
+          DM
+        </a>
+
         {/* Content */}
         {encounter ? (
           encounter.characters.length > 0 ? (

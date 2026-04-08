@@ -3,6 +3,7 @@ import { AppShell } from './components/layout/AppShell';
 import { Toolbar } from './components/layout/Toolbar';
 import { EncounterView } from './components/encounter/EncounterView';
 import { PlayerView } from './components/player/PlayerView';
+import { DmAuthGate } from './components/dm/DmAuthGate';
 
 function useHashRoute() {
   const [hash, setHash] = useState(window.location.hash);
@@ -19,16 +20,18 @@ function useHashRoute() {
 function App() {
   const hash = useHashRoute();
 
-  if (hash === '#/player') {
-    return <PlayerView />;
+  if (hash === '#/dm') {
+    return (
+      <DmAuthGate>
+        <AppShell>
+          <Toolbar />
+          <EncounterView />
+        </AppShell>
+      </DmAuthGate>
+    );
   }
 
-  return (
-    <AppShell>
-      <Toolbar />
-      <EncounterView />
-    </AppShell>
-  );
+  return <PlayerView />;
 }
 
 export default App;

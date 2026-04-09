@@ -14,9 +14,9 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
   const status = getHpStatus(character.currentHp, character.maxHp);
 
   const typeConfig = {
-    pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10' },
-    npc: { label: 'NPC', border: 'border-amber/40', text: 'text-amber', bg: 'bg-amber/10' },
-    monster: { label: 'MON', border: 'border-blood/40', text: 'text-blood', bg: 'bg-blood/10' },
+    pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10', cardBg: 'bg-obsidian/40' },
+    npc: { label: 'NPC', border: 'border-amber/40', text: 'text-amber', bg: 'bg-amber/10', cardBg: 'bg-obsidian/40' },
+    monster: { label: 'MON', border: 'border-blood/40', text: 'text-blood', bg: 'bg-blood/10', cardBg: 'bg-blood/[0.04]' },
   }[character.type];
 
   return (
@@ -27,7 +27,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
           ? 'border-amber/40 bg-amber/[0.04] glow-active player-card-active'
           : isDowned
             ? 'border-blood/20 bg-blood/[0.02] opacity-50'
-            : 'border-slate/20 bg-obsidian/40'
+            : `border-slate/20 ${typeConfig.cardBg}`
         }
       `}
     >
@@ -74,7 +74,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
                       <span className="text-arcane text-xs ml-1 font-semibold">(+{character.tempHp})</span>
                     )}
                   </div>
-                  <div className="flex-1 max-w-48">
+                  <div className="flex-1">
                     <HpBar current={character.currentHp} max={character.maxHp} temp={character.tempHp} />
                   </div>
                 </>

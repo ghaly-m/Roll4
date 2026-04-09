@@ -14,9 +14,9 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
   const status = getHpStatus(character.currentHp, character.maxHp);
 
   const typeConfig = {
-    pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10', cardBg: 'bg-obsidian/40' },
-    npc: { label: 'NPC', border: 'border-amber/40', text: 'text-amber', bg: 'bg-amber/10', cardBg: 'bg-obsidian/40' },
-    monster: { label: 'MON', border: 'border-blood/40', text: 'text-blood', bg: 'bg-blood/10', cardBg: 'bg-blood/[0.04]' },
+    pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10', cardBg: 'bg-obsidian/40', activeBorder: 'border-frost/50', activeBg: 'bg-frost/[0.05]', activeGlow: 'glow-active-frost', activeText: 'text-frost' },
+    npc: { label: 'NPC', border: 'border-amber/40', text: 'text-amber', bg: 'bg-amber/10', cardBg: 'bg-obsidian/40', activeBorder: 'border-amber/50', activeBg: 'bg-amber/[0.05]', activeGlow: 'glow-active', activeText: 'text-amber' },
+    monster: { label: 'MON', border: 'border-blood/40', text: 'text-blood', bg: 'bg-blood/10', cardBg: 'bg-blood/[0.04]', activeBorder: 'border-blood/50', activeBg: 'bg-blood/[0.06]', activeGlow: 'glow-active-blood', activeText: 'text-blood' },
   }[character.type];
 
   return (
@@ -24,7 +24,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
       className={`
         card-ornate rounded-lg border transition-all duration-300
         ${isActive
-          ? 'border-amber/40 bg-amber/[0.04] glow-active player-card-active'
+          ? `${typeConfig.activeBorder} ${typeConfig.activeBg} ${typeConfig.activeGlow} player-card-active`
           : isDowned
             ? 'border-blood/20 bg-blood/[0.02] opacity-50'
             : `border-slate/20 ${typeConfig.cardBg}`
@@ -37,7 +37,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
           {/* Initiative score or active diamond */}
           {isActive ? (
             <div className="w-12 h-12 flex items-center justify-center">
-              <span className="rune-shimmer text-amber text-2xl">&#9670;</span>
+              <span className={`rune-shimmer ${typeConfig.activeText} text-2xl`}>&#9670;</span>
             </div>
           ) : (
             <div className="w-12 h-12 flex items-center justify-center text-2xl font-bold font-mono text-amber/70">
@@ -55,7 +55,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
                 {character.name}
               </span>
               {isActive && (
-                <span className="text-[10px] font-display tracking-[0.2em] uppercase text-amber/60 ml-auto shrink-0">
+                <span className={`text-[10px] font-display tracking-[0.2em] uppercase ${typeConfig.activeText} opacity-60 ml-auto shrink-0`}>
                   Current Turn
                 </span>
               )}

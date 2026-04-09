@@ -175,6 +175,24 @@ input:focus, select:focus, textarea:focus, button:focus-visible {
   animation: arcane-pulse 3s ease-in-out infinite;
 }
 
+@keyframes frost-pulse {
+  0%, 100% { box-shadow: 0 0 15px -5px rgba(74, 158, 173, 0.12), inset 0 0 15px -10px rgba(74, 158, 173, 0.12); }
+  50% { box-shadow: 0 0 25px -5px rgba(74, 158, 173, 0.12), inset 0 0 25px -10px rgba(74, 158, 173, 0.12); }
+}
+
+.glow-active-frost {
+  animation: frost-pulse 3s ease-in-out infinite;
+}
+
+@keyframes blood-pulse {
+  0%, 100% { box-shadow: 0 0 15px -5px rgba(196, 43, 43, 0.12), inset 0 0 15px -10px rgba(196, 43, 43, 0.12); }
+  50% { box-shadow: 0 0 25px -5px rgba(196, 43, 43, 0.12), inset 0 0 25px -10px rgba(196, 43, 43, 0.12); }
+}
+
+.glow-active-blood {
+  animation: blood-pulse 3s ease-in-out infinite;
+}
+
 /* ── Rune shimmer for the turn arrow ───────────────── */
 
 @keyframes rune-shimmer {

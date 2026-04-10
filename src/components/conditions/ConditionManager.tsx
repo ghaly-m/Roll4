@@ -7,9 +7,10 @@ interface ConditionManagerProps {
   characterId: string;
   conditions: AppliedCondition[];
   onRemove: (instanceId: string) => void;
+  onPickerToggle?: (open: boolean) => void;
 }
 
-export function ConditionManager({ characterId, conditions, onRemove }: ConditionManagerProps) {
+export function ConditionManager({ characterId, conditions, onRemove, onPickerToggle }: ConditionManagerProps) {
   const [showPicker, setShowPicker] = useState(false);
 
   return (
@@ -22,14 +23,18 @@ export function ConditionManager({ characterId, conditions, onRemove }: Conditio
         />
       ))}
       <button
-        onClick={() => setShowPicker(!showPicker)}
+        onClick={() => {
+          const next = !showPicker;
+          setShowPicker(next);
+          onPickerToggle?.(next);
+        }}
         className="inline-flex items-center justify-center w-6 h-6 text-xs rounded border border-dashed border-ash/20 text-ash/40 hover:border-arcane/40 hover:text-arcane hover:bg-arcane/5 transition-all duration-200"
         title="Add condition"
       >
         +
       </button>
       {showPicker && (
-        <ConditionPicker characterId={characterId} onClose={() => setShowPicker(false)} />
+        <ConditionPicker characterId={characterId} onClose={() => { setShowPicker(false); onPickerToggle?.(false); }} />
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import type { Character } from '../../types';
 import { CONDITIONS_5E } from '../../data/conditions5e';
 import { HpBar } from '../hp/HpBar';
 import { getHpStatus, hpStatusColor } from '../../utils/hpStatus';
+import { useHpFlash } from '../../hooks/useHpFlash';
 
 interface PlayerCharacterCardProps {
   character: Character;
@@ -12,6 +13,12 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
   const isDowned = character.currentHp <= 0;
   const isPC = character.type === 'pc';
   const status = getHpStatus(character.currentHp, character.maxHp);
+  const hpFlash = useHpFlash(character.currentHp, character.maxHp);
+
+  const flashClass =
+    hpFlash === 'damage' ? 'animate-damage-flash' :
+    hpFlash === 'heal' ? 'animate-heal-glow' :
+    hpFlash === 'death' ? 'animate-death' : '';
 
   const typeConfig = {
     pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10', cardBg: 'bg-obsidian/40', activeBorder: 'border-frost/50', activeBg: 'bg-frost/[0.05]', activeGlow: 'glow-active-frost', activeText: 'text-frost' },
@@ -22,13 +29,14 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
   return (
     <div
       className={`
-        card-ornate rounded-lg border transition-all duration-300
+        card-ornate rounded-lg border card-turn-enter
         ${isActive
           ? `${typeConfig.activeBorder} ${typeConfig.activeBg} ${typeConfig.activeGlow} player-card-active`
           : isDowned
-            ? 'border-blood/20 bg-blood/[0.02] opacity-50'
+            ? 'border-blood/20 bg-blood/[0.02] opacity-50 is-downed'
             : `border-slate/20 ${typeConfig.cardBg}`
         }
+        ${flashClass}
       `}
     >
       <div className={`p-5 ${isActive ? 'py-6' : ''}`}>
@@ -97,7 +105,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
               return (
                 <span
                   key={cond.instanceId}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-display tracking-wider uppercase rounded border border-arcane/30 bg-arcane/10 text-arcane"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-display tracking-wider uppercase rounded border border-arcane/30 bg-arcane/10 text-arcane animate-condition-in"
                   title={def.description}
                 >
                   {def.name}

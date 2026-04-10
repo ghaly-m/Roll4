@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useEncounterStore } from '../../store/encounterStore';
 import { PlayerInitiativeList } from './PlayerInitiativeList';
+import { useAnimateOnChange } from '../../hooks/useAnimateOnChange';
 
 export function PlayerView() {
   const encounter = useEncounterStore((s) => s.encounter);
+  const isRoundPulsing = useAnimateOnChange(encounter?.round ?? 1, 800);
 
   // Sync state from DM tab via localStorage storage events
   useEffect(() => {
@@ -44,7 +46,7 @@ export function PlayerView() {
                   {encounter.isActive ? (
                     <>
                       <span className="text-amber/60">&#9876;</span>
-                      {' '}Round {encounter.round}{' '}
+                      {' '}Round <span className={`inline-block ${isRoundPulsing ? 'animate-round-pulse' : ''}`}>{encounter.round}</span>{' '}
                       <span className="text-amber/60">&#9876;</span>
                     </>
                   ) : (

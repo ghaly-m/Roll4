@@ -6,6 +6,7 @@ import { HpBar } from '../hp/HpBar';
 import { HpModifier } from '../hp/HpModifier';
 import { ConditionManager } from '../conditions/ConditionManager';
 import { MonsterStatBlockDisplay } from '../monsters/MonsterStatBlock';
+import { useHpFlash } from '../../hooks/useHpFlash';
 
 interface InitiativeRowProps {
   character: Character;
@@ -19,6 +20,7 @@ export function InitiativeRow({ character, isActive }: InitiativeRowProps) {
   const [expanded, setExpanded] = useState(false);
   const [editingInit, setEditingInit] = useState(false);
   const [initValue, setInitValue] = useState(String(character.initiative));
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const typeConfig = {
     pc: { label: 'PC', border: 'border-verdant/40', text: 'text-verdant', bg: 'bg-verdant/10' },
@@ -27,18 +29,26 @@ export function InitiativeRow({ character, isActive }: InitiativeRowProps) {
   }[character.type];
 
   const isDowned = character.currentHp <= 0;
+  const hpFlash = useHpFlash(character.currentHp, character.maxHp);
+
+  const flashClass =
+    hpFlash === 'damage' ? 'animate-damage-flash' :
+    hpFlash === 'heal' ? 'animate-heal-glow' :
+    hpFlash === 'death' ? 'animate-death' : '';
 
   return (
     <div
       className={`
-        card-ornate rounded-lg border transition-all duration-300
+        card-ornate rounded-lg border card-turn-enter relative
         ${isActive
           ? 'border-amber/40 bg-amber/[0.03] glow-active'
           : isDowned
-            ? 'border-blood/20 bg-blood/[0.02] opacity-60'
+            ? 'border-blood/20 bg-blood/[0.02] opacity-60 is-downed'
             : 'border-slate/20 bg-obsidian/40 hover:border-slate/30'
         }
+        ${flashClass}
       `}
+      style={pickerOpen ? { zIndex: 50 } : undefined}
     >
       <div className="p-4">
         {/* Top row: Initiative + Name + HP + Remove */}
@@ -124,6 +134,7 @@ export function InitiativeRow({ character, isActive }: InitiativeRowProps) {
             characterId={character.id}
             conditions={character.conditions}
             onRemove={(instanceId) => removeCondition(character.id, instanceId)}
+            onPickerToggle={setPickerOpen}
           />
         </div>
 

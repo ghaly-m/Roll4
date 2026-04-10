@@ -9,7 +9,7 @@ type FlashType = 'damage' | 'heal' | 'death' | null;
 export function useHpFlash(currentHp: number, maxHp: number): FlashType {
   const prevHp = useRef(currentHp);
   const [flash, setFlash] = useState<FlashType>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const prev = prevHp.current;

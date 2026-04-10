@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 export function useAnimateOnChange(value: number | string, durationMs = 800): boolean {
   const prevValue = useRef(value);
   const [animating, setAnimating] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (prevValue.current !== value && prevValue.current !== undefined) {

@@ -7,6 +7,7 @@ import { HpModifier } from '../hp/HpModifier';
 import { ConditionManager } from '../conditions/ConditionManager';
 import { MonsterStatBlockDisplay } from '../monsters/MonsterStatBlock';
 import { useHpFlash } from '../../hooks/useHpFlash';
+import { CharacterAvatar } from '../character/CharacterAvatar';
 
 interface InitiativeRowProps {
   character: Character;
@@ -51,8 +52,9 @@ export function InitiativeRow({ character, isActive }: InitiativeRowProps) {
       style={pickerOpen ? { zIndex: 50 } : undefined}
     >
       <div className="p-4">
-        {/* Top row: Initiative + Name + HP + Remove */}
-        <div className="flex items-center gap-4 mb-3">
+        {/* Top row: Avatar + Initiative + Name + HP + Remove */}
+        <div className="flex items-center gap-3 mb-3">
+          <CharacterAvatar character={character} className="w-20 h-16" />
           {/* Initiative score */}
           {editingInit ? (
             <input

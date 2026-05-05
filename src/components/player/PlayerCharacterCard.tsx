@@ -3,6 +3,7 @@ import { CONDITIONS_5E } from '../../data/conditions5e';
 import { HpBar } from '../hp/HpBar';
 import { getHpStatus, hpStatusColor } from '../../utils/hpStatus';
 import { useHpFlash } from '../../hooks/useHpFlash';
+import { CharacterAvatar } from '../character/CharacterAvatar';
 
 interface PlayerCharacterCardProps {
   character: Character;
@@ -29,7 +30,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
   return (
     <div
       className={`
-        card-ornate rounded-lg border card-turn-enter
+        card-ornate rounded-lg border card-turn-enter overflow-hidden flex
         ${isActive
           ? `${typeConfig.activeBorder} ${typeConfig.activeBg} ${typeConfig.activeGlow} player-card-active`
           : isDowned
@@ -39,66 +40,62 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
         ${flashClass}
       `}
     >
-      <div className={`p-5 ${isActive ? 'py-6' : ''}`}>
-        {/* Top row: Initiative + Name + Type badge */}
-        <div className="flex items-center gap-4">
-          {/* Initiative score or active diamond */}
+      {/* Avatar — flush left, full card height */}
+      <div className="relative flex-shrink-0 self-stretch w-40 p-2">
+        <CharacterAvatar character={character} className="w-full h-full rounded" />
+        <div className="absolute bottom-1 right-1 pointer-events-none">
           {isActive ? (
-            <div className="w-12 h-12 flex items-center justify-center">
-              <span className={`rune-shimmer ${typeConfig.activeText} text-2xl`}>&#9670;</span>
-            </div>
+            <span className={`rune-shimmer ${typeConfig.activeText} text-sm leading-none`}>&#9670;</span>
           ) : (
-            <div className="w-12 h-12 flex items-center justify-center text-2xl font-bold font-mono text-amber/70">
+            <span className="text-[10px] font-bold font-mono text-amber/70 bg-void/80 rounded px-0.5 leading-none">
               {character.initiative}
-            </div>
+            </span>
           )}
+        </div>
+      </div>
 
-          {/* Character info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2.5">
-              <span className={`text-[10px] font-display tracking-[0.15em] uppercase px-2 py-0.5 rounded ${typeConfig.border} ${typeConfig.text} ${typeConfig.bg} border`}>
-                {typeConfig.label}
-              </span>
-              <span className={`font-display font-semibold tracking-wide truncate ${isActive ? 'text-lg text-parchment' : 'text-base text-bone'} ${isDowned ? 'text-blood/60 line-through' : ''}`}>
-                {character.name}
-              </span>
-              {isActive && (
-                <span className={`text-[10px] font-display tracking-[0.2em] uppercase ${typeConfig.activeText} opacity-60 ml-auto shrink-0`}>
-                  Current Turn
-                </span>
-              )}
-            </div>
+      {/* Content */}
+      <div className={`flex-1 min-w-0 p-5 ${isActive ? 'py-6' : ''}`}>
+        <div className="flex items-center gap-2.5">
+          <span className={`text-[10px] font-display tracking-[0.15em] uppercase px-2 py-0.5 rounded ${typeConfig.border} ${typeConfig.text} ${typeConfig.bg} border`}>
+            {typeConfig.label}
+          </span>
+          <span className={`font-display font-semibold tracking-wide truncate ${isActive ? 'text-lg text-parchment' : 'text-base text-bone'} ${isDowned ? 'text-blood/60 line-through' : ''}`}>
+            {character.name}
+          </span>
+          {isActive && (
+            <span className={`text-[10px] font-display tracking-[0.2em] uppercase ${typeConfig.activeText} opacity-60 ml-auto shrink-0`}>
+              Current Turn
+            </span>
+          )}
+        </div>
 
-            {/* HP row */}
-            <div className="mt-2 flex items-center gap-3">
-              {isPC ? (
-                <>
-                  {/* PCs: show exact HP */}
-                  <div className="flex items-baseline gap-1 text-sm font-mono tabular-nums">
-                    <span className={hpStatusColor[status]}>{character.currentHp}</span>
-                    <span className="text-ash/30">/</span>
-                    <span className="text-ash/60">{character.maxHp}</span>
-                    {character.tempHp > 0 && (
-                      <span className="text-arcane text-xs ml-1 font-semibold">(+{character.tempHp})</span>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <HpBar current={character.currentHp} max={character.maxHp} temp={character.tempHp} />
-                  </div>
-                </>
-              ) : (
-                /* Monsters/NPCs: show status word only */
-                <span className={`text-sm font-display tracking-wider uppercase ${hpStatusColor[status]}`}>
-                  {status}
-                </span>
-              )}
-            </div>
-          </div>
+        {/* HP row */}
+        <div className="mt-2 flex items-center gap-3">
+          {isPC ? (
+            <>
+              <div className="flex items-baseline gap-1 text-sm font-mono tabular-nums">
+                <span className={hpStatusColor[status]}>{character.currentHp}</span>
+                <span className="text-ash/30">/</span>
+                <span className="text-ash/60">{character.maxHp}</span>
+                {character.tempHp > 0 && (
+                  <span className="text-arcane text-xs ml-1 font-semibold">(+{character.tempHp})</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <HpBar current={character.currentHp} max={character.maxHp} temp={character.tempHp} />
+              </div>
+            </>
+          ) : (
+            <span className={`text-sm font-display tracking-wider uppercase ${hpStatusColor[status]}`}>
+              {status}
+            </span>
+          )}
         </div>
 
         {/* Conditions */}
         {character.conditions.length > 0 && (
-          <div className="mt-3 ml-16 flex flex-wrap gap-1.5">
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {character.conditions.map((cond) => {
               const def = CONDITIONS_5E.find(c => c.id === cond.conditionId);
               if (!def) return null;

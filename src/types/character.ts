@@ -16,6 +16,7 @@ export interface Character {
   armorClass?: number;
   notes?: string;
   statBlock?: MonsterStatBlock;
+  imageUrl?: string;
 }
 
 export type NewCharacter = Omit<Character, 'id' | 'conditions'>;

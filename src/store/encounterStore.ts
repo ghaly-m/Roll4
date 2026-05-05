@@ -14,6 +14,7 @@ interface EncounterStore {
 
   // Initiative actions
   addCharacter: (char: NewCharacter) => void;
+  addCharacters: (chars: NewCharacter[]) => void;
   removeCharacter: (id: string) => void;
   updateCharacter: (id: string, updates: Partial<Character>) => void;
   updateInitiative: (id: string, initiative: number) => void;
@@ -70,6 +71,18 @@ export const useEncounterStore = create<EncounterStore>()(
             ...state.encounter,
             updatedAt: new Date().toISOString(),
             characters: [...state.encounter.characters, newChar],
+          },
+        };
+      }),
+
+      addCharacters: (chars) => set((state) => {
+        if (!state.encounter) return state;
+        const newChars = chars.map(char => ({ ...char, id: generateId(), conditions: [] as Character['conditions'] }));
+        return {
+          encounter: {
+            ...state.encounter,
+            updatedAt: new Date().toISOString(),
+            characters: [...state.encounter.characters, ...newChars],
           },
         };
       }),

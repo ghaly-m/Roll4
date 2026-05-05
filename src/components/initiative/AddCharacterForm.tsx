@@ -1,23 +1,27 @@
 import { useState } from 'react';
 import { useEncounterStore } from '../../store/encounterStore';
 import { MonsterSearch } from '../monsters/MonsterSearch';
+import { buildNamedCopies } from '../../utils/multiAdd';
 import type { CharacterType, NewCharacter } from '../../types';
 
 export function AddCharacterForm() {
-  const addCharacter = useEncounterStore((s) => s.addCharacter);
+  const addCharacters = useEncounterStore((s) => s.addCharacters);
+  const existingChars = useEncounterStore((s) => s.encounter?.characters ?? []);
   const [showMonsterSearch, setShowMonsterSearch] = useState(false);
   const [name, setName] = useState('');
   const [initiative, setInitiative] = useState('');
   const [ac, setAc] = useState('');
   const [maxHp, setMaxHp] = useState('');
   const [type, setType] = useState<CharacterType>('pc');
+  const [count, setCount] = useState(1);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    const char: NewCharacter = {
-      name: name.trim(),
+    const names = buildNamedCopies(name.trim(), count, existingChars);
+    const chars: NewCharacter[] = names.map((n) => ({
+      name: n,
       initiative: parseInt(initiative) || 0,
       initiativeModifier: 0,
       armorClass: parseInt(ac) || undefined,
@@ -25,13 +29,14 @@ export function AddCharacterForm() {
       currentHp: parseInt(maxHp) || 0,
       tempHp: 0,
       type,
-    };
+    }));
 
-    addCharacter(char);
+    addCharacters(chars);
     setName('');
     setInitiative('');
     setAc('');
     setMaxHp('');
+    setCount(1);
   };
 
   const inputClasses = "w-full px-3 py-2 text-sm rounded bg-void/60 border border-slate/30 text-bone placeholder:text-ash/30 focus:border-amber transition-colors font-body";
@@ -113,6 +118,21 @@ export function AddCharacterForm() {
               <option value="npc">NPC</option>
               <option value="monster">Monster</option>
             </select>
+          </div>
+
+          {/* Count */}
+          <div className="w-[68px]">
+            <label className="block text-[10px] font-display tracking-[0.15em] uppercase text-ash/60 mb-1.5">
+              Qty
+            </label>
+            <input
+              type="number"
+              min={1}
+              max={26}
+              value={count}
+              onChange={(e) => setCount(Math.min(26, Math.max(1, parseInt(e.target.value) || 1)))}
+              className={numInputClasses}
+            />
           </div>
 
           {/* Buttons */}

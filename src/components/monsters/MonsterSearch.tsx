@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { searchMonsters, fetchMonsterStatBlock, type Open5eMonsterSummary } from '../../api/open5e';
 import { parseStatBlockText } from '../../utils/parseStatBlock';
 import { useEncounterStore } from '../../store/encounterStore';
+import { buildNamedCopies } from '../../utils/multiAdd';
 import type { NewCharacter, MonsterStatBlock } from '../../types';
 
 type Tab = 'search' | 'paste';
@@ -19,7 +20,9 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
   const [error, setError] = useState<string | null>(null);
   const [pasteText, setPasteText] = useState('');
   const [parseError, setParseError] = useState<string | null>(null);
-  const addCharacter = useEncounterStore((s) => s.addCharacter);
+  const [count, setCount] = useState(1);
+  const addCharacters = useEncounterStore((s) => s.addCharacters);
+  const existingChars = useEncounterStore((s) => s.encounter?.characters ?? []);
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -54,8 +57,9 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
   }, [query, tab]);
 
   const addMonsterFromStatBlock = (statBlock: MonsterStatBlock) => {
-    const newChar: NewCharacter = {
-      name: statBlock.name,
+    const names = buildNamedCopies(statBlock.name, count, existingChars);
+    const chars: NewCharacter[] = names.map((name) => ({
+      name,
       initiative: 0,
       initiativeModifier: 0,
       maxHp: statBlock.hit_points,
@@ -64,8 +68,8 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
       type: 'monster',
       armorClass: statBlock.armor_class,
       statBlock,
-    };
-    addCharacter(newChar);
+    }));
+    addCharacters(chars);
     onClose();
   };
 
@@ -104,12 +108,25 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
             <h3 className="font-display text-sm font-bold tracking-[0.15em] uppercase text-amber">
               Add Monster
             </h3>
-            <button
-              onClick={onClose}
-              className="text-ash/40 hover:text-bone text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-slate/20 transition-colors"
-            >
-              &#x2715;
-            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <label className="text-[10px] font-display tracking-[0.12em] uppercase text-ash/50">Qty</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={26}
+                  value={count}
+                  onChange={(e) => setCount(Math.min(26, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="w-12 px-2 py-1 text-sm text-center font-mono rounded bg-void/60 border border-slate/30 text-bone focus:border-amber transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
+              <button
+                onClick={onClose}
+                className="text-ash/40 hover:text-bone text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-slate/20 transition-colors"
+              >
+                &#x2715;
+              </button>
+            </div>
           </div>
 
           {/* Tab toggle */}
@@ -217,7 +234,7 @@ export function MonsterSearch({ onClose }: MonsterSearchProps) {
               disabled={!pasteText.trim()}
               className="mt-4 w-full px-4 py-2.5 text-sm font-display tracking-wider uppercase rounded bg-amber text-void font-semibold hover:bg-amber-dark disabled:opacity-20 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-amber/10"
             >
-              Parse & Add Monster
+              {count > 1 ? `Parse & Add ${count}× Monster` : 'Parse & Add Monster'}
             </button>
           </div>
         )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Character } from '../../types';
 import { useEncounterStore } from '../../store/encounterStore';
 
@@ -33,6 +33,7 @@ async function imageFileToDataUrl(file: File, maxPx = 400): Promise<string> {
 export function CharacterAvatar({ character, className = '' }: Props) {
   const updateCharacter = useEncounterStore((s) => s.updateCharacter);
   const [awaitingPaste, setAwaitingPaste] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!awaitingPaste) return;
@@ -52,7 +53,6 @@ export function CharacterAvatar({ character, className = '' }: Props) {
     const cancelHandler = () => setAwaitingPaste(false);
 
     window.addEventListener('paste', pasteHandler);
-    // cancel on next click anywhere
     const timer = setTimeout(() => window.addEventListener('click', cancelHandler), 100);
 
     return () => {
@@ -62,33 +62,51 @@ export function CharacterAvatar({ character, className = '' }: Props) {
     };
   }, [awaitingPaste, character.id, updateCharacter]);
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const dataUrl = await imageFileToDataUrl(file);
+    updateCharacter(character.id, { imageUrl: dataUrl });
+    setAwaitingPaste(false);
+    e.target.value = '';
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAwaitingPaste(true);
+    fileInputRef.current?.click();
+  };
+
   const ring = TYPE_RING[character.type] ?? 'ring-slate/30';
 
   return (
-    <button
-      onClick={(e) => { e.stopPropagation(); setAwaitingPaste(true); }}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        if (character.imageUrl) updateCharacter(character.id, { imageUrl: undefined });
-      }}
-      className={`relative flex-shrink-0 rounded overflow-hidden ring-1 transition-all ${ring} ${awaitingPaste ? 'ring-2 ring-amber/80 animate-pulse' : 'hover:ring-2'} ${className}`}
-      title={character.imageUrl ? 'Click to replace · Right-click to remove' : 'Click then paste image (Ctrl+V)'}
-    >
-      {character.imageUrl ? (
-        <img src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
-      ) : (
-        <div className="w-full h-full bg-obsidian/60 flex items-center justify-center">
-          {awaitingPaste ? (
-            <span className="text-amber text-[7px] font-display tracking-wider uppercase leading-tight text-center px-0.5">
-              Paste<br />Now
-            </span>
-          ) : (
+    <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      <button
+        onClick={handleClick}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          if (character.imageUrl) updateCharacter(character.id, { imageUrl: undefined });
+        }}
+        className={`relative flex-shrink-0 rounded overflow-hidden ring-1 transition-all ${ring} ${awaitingPaste ? 'ring-2 ring-amber/80 animate-pulse' : 'hover:ring-2'} ${className}`}
+        title={character.imageUrl ? 'Tap to replace · Right-click to remove' : 'Tap to pick image · or Ctrl+V to paste'}
+      >
+        {character.imageUrl ? (
+          <img src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-obsidian/60 flex items-center justify-center">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-1/2 h-1/2 text-ash/25">
               <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
             </svg>
-          )}
-        </div>
-      )}
-    </button>
+          </div>
+        )}
+      </button>
+    </>
   );
 }

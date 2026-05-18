@@ -42,7 +42,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
     >
       {/* Avatar — flush left, full card height */}
       <div className="relative flex-shrink-0 self-stretch w-40 p-2">
-        <CharacterAvatar character={character} className="w-full h-full rounded" />
+        <CharacterAvatar character={character} className="w-full h-full rounded" readonly />
         <div className="absolute bottom-1 right-1 pointer-events-none">
           {isActive ? (
             <span className={`rune-shimmer ${typeConfig.activeText} text-sm leading-none`}>&#9670;</span>

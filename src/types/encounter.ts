@@ -10,3 +10,10 @@ export interface Encounter {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface SavedEncounterEntry {
+  id: string;
+  name: string;
+  savedAt: string;
+  encounter: Encounter;
+}

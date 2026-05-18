@@ -1,16 +1,22 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Character, NewCharacter, Encounter, AppliedCondition } from '../types';
+import type { Character, NewCharacter, Encounter, AppliedCondition, SavedEncounterEntry } from '../types';
 import { generateId } from '../utils/id';
 import { sortByInitiative } from '../utils/initiative';
 import { applyDamage, applyHealing } from '../utils/hp';
 
 interface EncounterStore {
   encounter: Encounter | null;
+  savedEncounters: SavedEncounterEntry[];
 
   // Encounter lifecycle
   newEncounter: (name: string) => void;
   deleteEncounter: () => void;
+
+  // Save / load
+  saveCurrentEncounter: () => void;
+  loadSavedEncounter: (id: string) => void;
+  deleteSavedEncounter: (id: string) => void;
 
   // Initiative actions
   addCharacter: (char: NewCharacter) => void;
@@ -47,6 +53,28 @@ export const useEncounterStore = create<EncounterStore>()(
   persist(
     (set) => ({
       encounter: null,
+      savedEncounters: [],
+
+      saveCurrentEncounter: () => set((state) => {
+        if (!state.encounter) return state;
+        const entry: SavedEncounterEntry = {
+          id: generateId(),
+          name: state.encounter.name,
+          savedAt: new Date().toISOString(),
+          encounter: { ...state.encounter },
+        };
+        return { savedEncounters: [entry, ...state.savedEncounters] };
+      }),
+
+      loadSavedEncounter: (id) => set((state) => {
+        const entry = state.savedEncounters.find(e => e.id === id);
+        if (!entry) return state;
+        return { encounter: { ...entry.encounter, updatedAt: new Date().toISOString() } };
+      }),
+
+      deleteSavedEncounter: (id) => set((state) => ({
+        savedEncounters: state.savedEncounters.filter(e => e.id !== id),
+      })),
 
       newEncounter: (name) => set({
         encounter: {
@@ -253,7 +281,7 @@ export const useEncounterStore = create<EncounterStore>()(
     {
       name: 'roll4-encounter',
       version: 1,
-      partialize: (state) => ({ encounter: state.encounter }),
+      partialize: (state) => ({ encounter: state.encounter, savedEncounters: state.savedEncounters }),
     }
   )
 );

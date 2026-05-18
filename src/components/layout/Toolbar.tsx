@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useEncounterStore } from '../../store/encounterStore';
+import { EncounterLibrary } from '../encounter/EncounterLibrary';
 
 export function Toolbar() {
   const encounter = useEncounterStore((s) => s.encounter);
   const newEncounter = useEncounterStore((s) => s.newEncounter);
   const deleteEncounter = useEncounterStore((s) => s.deleteEncounter);
   const [showNew, setShowNew] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
   const [name, setName] = useState('');
 
   const handleCreate = () => {
@@ -37,6 +39,12 @@ export function Toolbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowLibrary(true)}
+            className="px-4 py-2 text-sm font-display tracking-wider uppercase rounded border border-slate/30 text-ash hover:text-bone hover:border-slate/50 transition-all duration-200"
+          >
+            Library
+          </button>
           {encounter && (
             <button
               onClick={deleteEncounter}
@@ -89,6 +97,8 @@ export function Toolbar() {
           &#10022;
         </span>
       </div>
+
+      {showLibrary && <EncounterLibrary onClose={() => setShowLibrary(false)} />}
     </header>
   );
 }

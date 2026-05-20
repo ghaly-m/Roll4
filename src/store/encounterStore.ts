@@ -19,7 +19,7 @@ interface EncounterStore {
   savedEncounters: SavedEncounterEntry[];
 
   // Encounter lifecycle
-  newEncounter: (name: string) => void;
+  newEncounter: (name: string, sessionCode?: string) => void;
   deleteEncounter: () => void;
 
   // Save / load
@@ -85,11 +85,11 @@ export const useEncounterStore = create<EncounterStore>()(
         savedEncounters: state.savedEncounters.filter(e => e.id !== id),
       })),
 
-      newEncounter: (name) => set({
+      newEncounter: (name, sessionCode) => set({
         encounter: {
           id: generateId(),
           name,
-          sessionCode: generateSessionCode(),
+          sessionCode: sessionCode?.trim().toUpperCase() || generateSessionCode(),
           characters: [],
           currentTurnIndex: 0,
           round: 1,

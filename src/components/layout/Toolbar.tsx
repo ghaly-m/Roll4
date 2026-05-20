@@ -9,11 +9,13 @@ export function Toolbar() {
   const [showNew, setShowNew] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
   const [name, setName] = useState('');
+  const [code, setCode] = useState('');
 
   const handleCreate = () => {
     if (name.trim()) {
-      newEncounter(name.trim());
+      newEncounter(name.trim(), code.trim() || undefined);
       setName('');
+      setCode('');
       setShowNew(false);
     }
   };
@@ -84,6 +86,12 @@ export function Toolbar() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Name your encounter..."
                 className="px-4 py-2 text-sm rounded bg-obsidian border border-slate/40 text-bone placeholder:text-ash/40 focus:border-amber transition-colors font-body"
+              />
+              <input
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
+                placeholder="Code (optional)"
+                className="w-36 px-4 py-2 text-sm font-mono tracking-widest rounded bg-obsidian border border-slate/40 text-bone placeholder:text-ash/30 focus:border-amber transition-colors uppercase"
               />
               <button
                 type="submit"

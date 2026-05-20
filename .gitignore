@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# PartyKit local dev state
+.partykit/
+
+# Claude internal
+.superpowers/
+.claude/worktrees/
+plan.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

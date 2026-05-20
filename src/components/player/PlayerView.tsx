@@ -1,22 +1,42 @@
-import { useEffect } from 'react';
-import { useEncounterStore } from '../../store/encounterStore';
+import { useState, useCallback } from 'react';
+import type { Encounter } from '../../types';
 import { PlayerInitiativeList } from './PlayerInitiativeList';
+import { SessionJoin } from './SessionJoin';
+import { usePlayerPartySync } from '../../hooks/usePartySync';
 import { useAnimateOnChange } from '../../hooks/useAnimateOnChange';
 
+const SESSION_KEY = 'roll4-session-code';
+
+function getInitialCode(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  const urlCode = params.get('session');
+  if (urlCode) {
+    sessionStorage.setItem(SESSION_KEY, urlCode);
+    return urlCode;
+  }
+  return sessionStorage.getItem(SESSION_KEY);
+}
+
 export function PlayerView() {
-  const encounter = useEncounterStore((s) => s.encounter);
+  const [sessionCode, setSessionCode] = useState<string | null>(getInitialCode);
+  const [encounter, setEncounter] = useState<Encounter | null>(null);
+
+  const onEncounter = useCallback((e: Encounter) => setEncounter(e), []);
+  usePlayerPartySync(sessionCode, onEncounter);
+
   const isRoundPulsing = useAnimateOnChange(encounter?.round ?? 1, 800);
 
-  // Sync state from DM tab via localStorage storage events
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'roll4-encounter' && e.newValue) {
-        useEncounterStore.persist.rehydrate();
-      }
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
+  const handleJoin = (code: string) => {
+    sessionStorage.setItem(SESSION_KEY, code);
+    setSessionCode(code);
+    setEncounter(null);
+  };
+
+  const handleLeave = () => {
+    sessionStorage.removeItem(SESSION_KEY);
+    setSessionCode(null);
+    setEncounter(null);
+  };
 
   return (
     <div className="min-h-screen relative flex flex-col">
@@ -40,7 +60,6 @@ export function PlayerView() {
                 </span>
               </div>
 
-              {/* Round counter */}
               <div className="mt-6">
                 <span className="font-display text-xs tracking-[0.3em] uppercase text-ash/50">
                   {encounter.isActive ? (
@@ -55,6 +74,10 @@ export function PlayerView() {
                 </span>
               </div>
             </>
+          ) : sessionCode ? (
+            <p className="text-sm tracking-[0.2em] text-slate mt-1 font-display uppercase">
+              Connecting to {sessionCode}…
+            </p>
           ) : (
             <p className="text-sm tracking-[0.2em] text-slate mt-1 font-display uppercase">
               Player View
@@ -63,7 +86,9 @@ export function PlayerView() {
         </header>
 
         {/* Content */}
-        {encounter ? (
+        {!sessionCode ? (
+          <SessionJoin onJoin={handleJoin} />
+        ) : encounter ? (
           encounter.characters.length > 0 ? (
             <PlayerInitiativeList encounter={encounter} />
           ) : (
@@ -74,46 +99,24 @@ export function PlayerView() {
             </div>
           )
         ) : (
-          <div className="text-center py-32 animate-fade-up">
-            <div className="inline-block mb-8 relative">
-              <svg width="80" height="80" viewBox="0 0 80 80" className="text-amber/15">
-                <polygon
-                  points="40,4 72,22 72,58 40,76 8,58 8,22"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                />
-                <polygon
-                  points="40,12 64,26 64,54 40,68 16,54 16,26"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                />
-                <text
-                  x="40"
-                  y="45"
-                  textAnchor="middle"
-                  fill="currentColor"
-                  className="font-display text-lg"
-                  style={{ fontSize: '16px' }}
-                >
-                  20
-                </text>
-              </svg>
-            </div>
-            <h2 className="font-display text-2xl font-bold tracking-[0.15em] uppercase text-bone/20 mb-3">
-              No Active Encounter
-            </h2>
-            <p className="text-ash/40 text-sm tracking-wide">
-              Waiting for the DM to start an encounter
+          <div className="text-center py-20">
+            <p className="text-ash/40 text-sm tracking-wide font-display uppercase animate-pulse">
+              Waiting for encounter...
             </p>
           </div>
         )}
-
       </div>
 
-      {/* DM link */}
-      <footer className="relative z-10 py-6 text-center">
+      {/* Footer */}
+      <footer className="relative z-10 py-6 text-center flex items-center justify-center gap-6">
+        {sessionCode && (
+          <button
+            onClick={handleLeave}
+            className="inline-block px-5 py-2 font-display text-xs tracking-[0.2em] uppercase text-ash hover:text-blood border border-slate/40 hover:border-blood/40 rounded transition-all duration-200"
+          >
+            Leave Session
+          </button>
+        )}
         <a
           href="#/dm"
           className="inline-block px-5 py-2 font-display text-xs tracking-[0.2em] uppercase text-ash hover:text-amber border border-slate/40 hover:border-amber/40 rounded transition-all duration-200"

@@ -33,6 +33,18 @@ export function Toolbar() {
               Initiative Tracker
             </p>
           )}
+          {encounter && (
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}${window.location.pathname}?session=${encounter.sessionCode}`;
+                navigator.clipboard.writeText(url);
+              }}
+              title="Click to copy player link"
+              className="mt-1 font-mono text-xs tracking-[0.3em] text-ash/50 hover:text-amber transition-colors uppercase"
+            >
+              Session: {encounter.sessionCode}
+            </button>
+          )}
         </div>
 
         {/* Actions */}

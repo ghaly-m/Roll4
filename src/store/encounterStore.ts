@@ -5,6 +5,15 @@ import { generateId } from '../utils/id';
 import { sortByInitiative } from '../utils/initiative';
 import { applyDamage, applyHealing } from '../utils/hp';
 
+function generateSessionCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 interface EncounterStore {
   encounter: Encounter | null;
 
@@ -52,6 +61,7 @@ export const useEncounterStore = create<EncounterStore>()(
         encounter: {
           id: generateId(),
           name,
+          sessionCode: generateSessionCode(),
           characters: [],
           currentTurnIndex: 0,
           round: 1,
@@ -252,8 +262,15 @@ export const useEncounterStore = create<EncounterStore>()(
     }),
     {
       name: 'roll4-encounter',
-      version: 1,
+      version: 2,
       partialize: (state) => ({ encounter: state.encounter }),
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as { encounter: Encounter | null };
+        if (version < 2 && state.encounter && !state.encounter.sessionCode) {
+          state.encounter.sessionCode = generateSessionCode();
+        }
+        return state;
+      },
     }
   )
 );

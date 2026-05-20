@@ -19,6 +19,7 @@ function toPlayerEncounter(encounter: Encounter): Encounter {
       type: c.type,
       armorClass: c.armorClass,
       notes: c.notes,
+      imageUrl: c.imageUrl,
     })),
   };
 }

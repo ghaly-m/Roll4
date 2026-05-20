@@ -5,6 +5,8 @@ import { useEncounterStore } from '../../store/encounterStore';
 interface Props {
   character: Character;
   className?: string;
+  readonly?: boolean;
+  objectFit?: 'cover' | 'contain';
 }
 
 const TYPE_RING: Record<string, string> = {
@@ -30,7 +32,7 @@ async function imageFileToDataUrl(file: File, maxPx = 400): Promise<string> {
   });
 }
 
-export function CharacterAvatar({ character, className = '' }: Props) {
+export function CharacterAvatar({ character, className = '', readonly = false, objectFit = 'cover' }: Props) {
   const updateCharacter = useEncounterStore((s) => s.updateCharacter);
   const [awaitingPaste, setAwaitingPaste] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -79,6 +81,28 @@ export function CharacterAvatar({ character, className = '' }: Props) {
 
   const ring = TYPE_RING[character.type] ?? 'ring-slate/30';
 
+  const inner = character.imageUrl ? (
+    <img
+      src={character.imageUrl}
+      alt={character.name}
+      className={`w-full h-full ${objectFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+    />
+  ) : (
+    <div className="w-full h-full bg-obsidian/60 flex items-center justify-center">
+      <svg viewBox="0 0 24 24" fill="currentColor" className="w-1/2 h-1/2 text-ash/25">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+      </svg>
+    </div>
+  );
+
+  if (readonly) {
+    return (
+      <div className={`relative flex-shrink-0 rounded overflow-hidden ring-1 ${ring} ${className}`}>
+        {inner}
+      </div>
+    );
+  }
+
   return (
     <>
       <input
@@ -97,15 +121,7 @@ export function CharacterAvatar({ character, className = '' }: Props) {
         className={`relative flex-shrink-0 rounded overflow-hidden ring-1 transition-all ${ring} ${awaitingPaste ? 'ring-2 ring-amber/80 animate-pulse' : 'hover:ring-2'} ${className}`}
         title={character.imageUrl ? 'Tap to replace · Right-click to remove' : 'Tap to pick image · or Ctrl+V to paste'}
       >
-        {character.imageUrl ? (
-          <img src={character.imageUrl} alt={character.name} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full bg-obsidian/60 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-1/2 h-1/2 text-ash/25">
-              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-            </svg>
-          </div>
-        )}
+        {inner}
       </button>
     </>
   );

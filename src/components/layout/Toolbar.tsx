@@ -90,8 +90,8 @@ export function Toolbar() {
               <input
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
-                placeholder="Code (optional)"
-                className="w-36 px-4 py-2 text-sm font-mono tracking-widest rounded bg-obsidian border border-slate/40 text-bone placeholder:text-ash/30 focus:border-amber transition-colors uppercase"
+                placeholder="Code"
+                className="w-28 px-4 py-2 text-sm font-body rounded bg-obsidian border border-slate/40 text-bone placeholder:text-ash/30 focus:border-amber transition-colors"
               />
               <button
                 type="submit"

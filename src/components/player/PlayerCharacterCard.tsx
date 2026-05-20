@@ -60,7 +60,7 @@ export function PlayerCharacterCard({ character, isActive }: PlayerCharacterCard
           <span className={`text-[10px] font-display tracking-[0.15em] uppercase px-2 py-0.5 rounded ${typeConfig.border} ${typeConfig.text} ${typeConfig.bg} border`}>
             {typeConfig.label}
           </span>
-          <span className={`font-display font-semibold tracking-wide truncate ${isActive ? 'text-lg text-parchment' : 'text-base text-bone'} ${isDowned ? 'text-blood/60 line-through' : ''}`}>
+          <span className={`font-display font-semibold tracking-wide break-words min-w-0 ${isActive ? 'text-lg text-parchment' : 'text-base text-bone'} ${isDowned ? 'text-blood/60 line-through' : ''}`}>
             {character.name}
           </span>
           {isActive && (

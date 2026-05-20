@@ -97,7 +97,7 @@ export function InitiativeRow({ character, isActive }: InitiativeRowProps) {
                 <span className={`text-[10px] font-display tracking-[0.15em] uppercase px-2 py-0.5 rounded ${typeConfig.border} ${typeConfig.text} ${typeConfig.bg} border`}>
                   {typeConfig.label}
                 </span>
-                <span className={`font-display text-sm font-semibold tracking-wide truncate ${isDowned ? 'text-blood/60 line-through' : 'text-bone'}`}>
+                <span className={`font-display text-sm font-semibold tracking-wide break-words min-w-0 ${isDowned ? 'text-blood/60 line-through' : 'text-bone'}`}>
                   {character.name}
                 </span>
                 {character.armorClass != null && (

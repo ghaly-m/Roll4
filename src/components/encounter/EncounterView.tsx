@@ -1,9 +1,11 @@
 import { useEncounterStore } from '../../store/encounterStore';
 import { EncounterHeader } from './EncounterHeader';
 import { InitiativeTracker } from '../initiative/InitiativeTracker';
+import { useDmPartySync } from '../../hooks/usePartySync';
 
 export function EncounterView() {
   const encounter = useEncounterStore((s) => s.encounter);
+  useDmPartySync(encounter?.sessionCode, encounter);
 
   if (!encounter) {
     return (

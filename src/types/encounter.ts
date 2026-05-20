@@ -3,6 +3,7 @@ import type { Character } from './character';
 export interface Encounter {
   id: string;
   name: string;
+  sessionCode: string;
   characters: Character[];
   currentTurnIndex: number;
   round: number;
